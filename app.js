@@ -171,20 +171,25 @@ let totalImages = 0;
 function updateLoadingProgress() {
     if (loadedCount === 0 || totalImages === 0) return;
     const progress = (loadedCount / totalImages) * 100;
-    document.getElementById('loadingBar').style.width = progress + '%';
+    const loadingBar = document.getElementById('loadingBar');
+    if (loadingBar) loadingBar.style.width = progress + '%';
     const counter = document.getElementById('loadingCounter');
-    counter.textContent = `📸 Loading: ${loadedCount}/${totalImages}`;
+    if (counter) counter.textContent = `📸 Loading: ${loadedCount}/${totalImages}`;
     if (loadedCount === totalImages) {
-        counter.classList.remove('show');
-        document.getElementById('loadingBar').style.width = '100%';
-        setTimeout(() => { document.getElementById('loadingBar').style.opacity = '0'; }, 500);
+        if (counter) counter.classList.remove('show');
+        if (loadingBar) loadingBar.style.width = '100%';
+        setTimeout(() => { if (loadingBar) loadingBar.style.opacity = '0'; }, 500);
     }
 }
 
 function startGallery() {
     const welcomeScreen = document.getElementById('welcomeScreen');
-    welcomeScreen.classList.add('hidden');
-    setTimeout(() => { welcomeScreen.style.display = 'none'; generateGallery(); }, 800);
+    if (welcomeScreen) {
+        welcomeScreen.classList.add('hidden');
+        setTimeout(() => { welcomeScreen.style.display = 'none'; generateGallery(); }, 800);
+    } else {
+        generateGallery();
+    }
 }
 
 function generateGallery() {
@@ -262,11 +267,22 @@ function prevImage() { currentImageIndex = (currentImageIndex - 1 + images.lengt
 
 function downloadImage() { const imgSrc = document.getElementById('modalImg').src; const fileName = images[currentImageIndex]; const link = document.createElement('a'); link.href = imgSrc; link.download = fileName || 'photo.jpg'; link.style.display = 'none'; document.body.appendChild(link); link.click(); document.body.removeChild(link); }
 
-document.addEventListener('keydown', (e) => { const modal = document.getElementById('modal'); if (!modal.classList.contains('active')) return; if (e.key === 'ArrowRight') nextImage(); if (e.key === 'ArrowLeft') prevImage(); if (e.key === 'Escape') closeModal(); });
-document.getElementById('modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
-
 document.addEventListener('DOMContentLoaded', () => {
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('service-worker.js').catch(() => {}); }
+
+    // Safely attach modal click handler and keyboard navigation only when modal exists
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        const m = modal || document.getElementById('modal');
+        if (!m || !m.classList.contains('active')) return;
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+        if (e.key === 'Escape') closeModal();
+    });
 });
 
 function preloadImages(options = { concurrency: 6 }) {
