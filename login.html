@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Protected Gallery — Login</title>
+  <style>
+    body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:linear-gradient(135deg,#111827,#0f172a);color:#fff;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial}
+    .card{background:rgba(255,255,255,0.04);padding:28px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6);width:360px}
+    input{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;margin-top:8px}
+    button{margin-top:12px;width:100%;padding:12px;border-radius:8px;border:none;background:#0ea5a2;color:#042;cursor:pointer;font-weight:600}
+    .help{font-size:13px;opacity:0.8;margin-top:8px}
+    .error{color:#ff7b7b;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Enter Access Password</h2>
+    <form id="loginForm">
+      <input id="passwordInput" type="password" placeholder="Password" autocomplete="current-password" required />
+      <button type="submit">Enter Gallery</button>
+      <div class="help">If you are a relative, enter the password provided to you.</div>
+      <div id="error" class="error" role="alert" style="display:none"></div>
+    </form>
+  </div>
+  <script src="auth.js"></script>
+</body>
+</html>
